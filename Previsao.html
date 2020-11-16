@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Previsao de Possivel Diabetes</title>
+</head>
+<body>
+    <h3>Previsão Diabetes</h3>
+    <div>
+        <form action="/result" method="POST">
+            <label for="gest">Número de Gestações</label>
+            <input type="text" id="gest" name="gest">
+            <br>
+
+            <label for="glic">Concentração de Glicose</label>
+            <input type="text" id="glic" name="glic">
+            <br>
+
+            <label for="pressDiast">Pressão Diastólica</label>
+            <input type="text" id="pressDiast" name="pressDiast">(mm Hg)
+            <br>
+
+            <label for="espessura">Espessura da Dobra Cutânea do Triceps</label>
+            <input type="text" id="espessura" name="espessura">(mm)
+            <br>
+
+            <label for="insulina">Nivel de Insulina</label>
+            <input type="text" id="insulina" name="insulina">(mu U/ml)
+            <br>
+
+            <label for="imc">Indice de Massa Corporal</label>
+            <input type="text" id="imc" name="imc">
+            <br>
+
+            <label for="heranca">Herança Genética</label>
+            <input type="text" id="heranca" name="heranca">(mm)
+
+            <label for="age">Idade</label>
+            <input type="text" id="age" name="age">
+            <br>
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+
+</body>
+</html>
