@@ -10,6 +10,7 @@ from mlxtend.plotting import plot_confusion_matrix
 from matplotlib import pyplot as plt
 import pandas as pd
 
+from copy import copy
 
 # normalizando
 def normalizando(entradas):
@@ -38,27 +39,51 @@ def trata_dataset(X, y):
 
   return X_train, x_test, y_train, y_test
 
+# Seleciona o modelo se o score do modelo for melhor
+def modelo_melhor_score(modelo, X, y, melhor_modelo):
+  if melhor_modelo == None or modelo.score(X, y) > melhor_modelo.score(X, y):
+    return modelo
+  else:
+    return melhor_modelo
+
+# treina diversos modelos de uma mesma classe para salvar o melhor resultado
+def treina_melhor_modelo(modelo_cls, X, y, ciclo = 10):
+  melhor_modelo = None
+  for i in range(ciclo):
+    modelo = copy(modelo_cls)
+    X_train, x_test, y_train, y_test = trata_dataset(X, y)
+    modelo.fit(X_train, y_train)
+    melhor_modelo = modelo_melhor_score(modelo, x_test, y_test, melhor_modelo)
+  return melhor_modelo
+
+# Escolhe o modelo em que o score e maior em uma lista de modelos
+def escolhe_modelo_maior_score(modelos, X, y):
+  melhor_modelo = None
+  for modelo in modelos:
+    melhor_modelo = modelo_melhor_score(modelo, X, y, melhor_modelo)
+  return melhor_modelo
+
 dataset = pd.read_csv("pima-indians-diabetes.csv", header=None)
 X = dataset.drop([8], axis=1) # features
 y = dataset[8] # Alvo
 
 clf_mlp = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5,10), random_state=1)
+clf_mlp = treina_melhor_modelo(clf_mlp, X, y)
+
 clf_arvore = DecisionTreeClassifier(random_state=1)
+clf_arvore = treina_melhor_modelo(clf_arvore, X, y)
+
 clf_KNN = KNeighborsClassifier(n_neighbors=5)
+clf_KNN = treina_melhor_modelo(clf_KNN, X, y)
+
 nome_modelos = ["Rede MLP Classificador", "KNN Classificador", "Arvore Classificador"]
 modelos = [clf_mlp, clf_KNN, clf_arvore]
 
+
 X_train, x_test, y_train, y_test = trata_dataset(X, y)
-
-for m in modelos:
-  m.fit(X_train, y_train)
-
-for m in enumerate(modelos):
-  print(nome_modelos[m[0]])
-  print("Score = ",testando(m[1], x_test, y_test))
+melhor_modelo = escolhe_modelo_maior_score(modelos, x_test, y_test)
 
 
 
-"""print(dataset.head())
-print(X.head())
-print(y.head())"""
+"""print(melhor_modelo.score(x_test,y_test))
+print(melhor_modelo.__str__())"""
