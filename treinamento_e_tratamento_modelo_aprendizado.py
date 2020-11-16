@@ -11,6 +11,8 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 from copy import copy
+import joblib
+
 
 # normalizando
 def normalizando(entradas):
@@ -83,7 +85,8 @@ modelos = [clf_mlp, clf_KNN, clf_arvore]
 X_train, x_test, y_train, y_test = trata_dataset(X, y)
 melhor_modelo = escolhe_modelo_maior_score(modelos, x_test, y_test)
 
-
+arquivo_saida = "melhor_modelo.sav"
+joblib.dump(melhor_modelo, arquivo_saida)
 
 """print(melhor_modelo.score(x_test,y_test))
 print(melhor_modelo.__str__())"""
