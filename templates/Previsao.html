@@ -34,6 +34,7 @@
 
             <label for="heranca">Herança Genética</label>
             <input type="text" id="heranca" name="heranca">(mm)
+            <br>
 
             <label for="age">Idade</label>
             <input type="text" id="age" name="age">
@@ -41,6 +42,11 @@
             <input type="submit" value="Enviar">
         </form>
     </div>
+    <div>
+    {% if previsao: %}
+            Na previsão: {{previsao}}
+    {% endif %}
 
+    </div>
 </body>
 </html>
