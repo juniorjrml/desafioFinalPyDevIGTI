@@ -55,7 +55,7 @@ def treina_melhor_modelo(modelo_cls, X, y, ciclo = 10):
     modelo = copy(modelo_cls)
     X_train, x_test, y_train, y_test = trata_dataset(X, y)
     modelo.fit(X_train, y_train)
-    melhor_modelo = modelo_melhor_score(modelo, x_test, y_test, melhor_modelo)
+    melhor_modelo = modelo_melhor_score(modelo, X, y, melhor_modelo)
   return melhor_modelo
 
 # Escolhe o modelo em que o score e maior em uma lista de modelos
@@ -70,13 +70,13 @@ X = dataset.drop([8], axis=1) # features
 y = dataset[8] # Alvo
 
 clf_mlp = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5,10), random_state=1)
-clf_mlp = treina_melhor_modelo(clf_mlp, X, y)
+clf_mlp = treina_melhor_modelo(clf_mlp, X, y, ciclo=100)
 
 clf_arvore = DecisionTreeClassifier(random_state=1)
-clf_arvore = treina_melhor_modelo(clf_arvore, X, y)
+clf_arvore = treina_melhor_modelo(clf_arvore, X, y, ciclo=100)
 
 clf_KNN = KNeighborsClassifier(n_neighbors=5)
-clf_KNN = treina_melhor_modelo(clf_KNN, X, y)
+clf_KNN = treina_melhor_modelo(clf_KNN, X, y, ciclo=100)
 
 nome_modelos = ["Rede MLP Classificador", "KNN Classificador", "Arvore Classificador"]
 modelos = [clf_mlp, clf_KNN, clf_arvore]
@@ -84,9 +84,9 @@ modelos = [clf_mlp, clf_KNN, clf_arvore]
 
 X_train, x_test, y_train, y_test = trata_dataset(X, y)
 melhor_modelo = escolhe_modelo_maior_score(modelos, x_test, y_test)
-
+print(melhor_modelo.score(X, y))
 arquivo_saida = "melhor_modelo.sav"
 joblib.dump(melhor_modelo, arquivo_saida)
 
-"""print(melhor_modelo.score(x_test,y_test))
-print(melhor_modelo.__str__())"""
+print(melhor_modelo.score(x_test,y_test))
+print(melhor_modelo.__str__())

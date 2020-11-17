@@ -17,11 +17,20 @@ import joblib
 """
 campos = ["gest", "glic", "pressDiast", "espessura", "insulina", "imc", "heranca", "age"]
 
+def converter_para_tipo_do_elemento(x):
+    try:
+        return int(x)
+    except ValueError:
+        try:
+            return float(x)
+        except ValueError:
+            return x
+
 def gera_lista_formulario(form):
     lista_valores_formulario = []
     for campo in campos:
         print(form[campo])
-        lista_valores_formulario.append(float(form[campo]))
+        lista_valores_formulario.append(converter_para_tipo_do_elemento(form[campo]))
     print(lista_valores_formulario)
     return lista_valores_formulario
 
@@ -38,11 +47,15 @@ def home():
 
 
 @app.route('/result', methods=['POST'])
-def tratar_dados():
+def result():
     formulario = request.form
     lista_valores_formulario = gera_lista_formulario(formulario)
-    previsao = previsao_diabetes(lista_valores_formulario)
-    return render_template("Previsao.html", previsao = previsao), 200
+    resultado = previsao_diabetes(lista_valores_formulario)
+    if resultado:
+       previsao="Em nossa previsao o paciente possui Diabetes {}".format(resultado)
+    else:
+       previsao="Em nossa previsao o paciente não possui Diabetes".format(resultado)
+    return render_template("Previsao.html", previsao=previsao)
 
 
 app.run(port=5000,debug=True)
